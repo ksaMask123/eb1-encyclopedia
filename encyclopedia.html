@@ -4923,13 +4923,9 @@ function bldNavBack(){
   if(!BLD_NAV.length) return false;
   var e=BLD_NAV.pop();
   try{
-    if(typeof BLD_STATE!=="undefined"&&BLD_STATE){
-      BLD_STATE.i=e.i; BLD_STATE.cls=e.cls; BLD_STATE.q=e.q;
-    }
-    var sel=document.getElementById("bldFac"); if(sel) sel.value=String(e.i);
-    var qq=document.getElementById("bldQ"); if(qq) qq.value=e.q||"";
-    if(typeof bldBuildTabs==="function") bldBuildTabs();
-    if(typeof bldRender==="function") bldRender();
+    /* 🛑 第63轮·纯浮层短路：返回键只存在于详情浮层内，返回＝把浮层内容换回上一座建筑，
+       底层总览（派系/筛选/搜索/栅格/滚动）一律不动，浮层与底层彻底隔离。
+       （旧实现在此重置 BLD_STATE.i/cls/q + 改 bldFac/bldQ + 整段重渲 bldGrid，会带跑底层。） */
     if(e.lv&&typeof bldOpenDetail==="function") bldOpenDetail(e.lv);
   }catch(x){}
   return true;
@@ -5355,6 +5351,16 @@ function bldOpenByName(nm){
   const ent = idx.map.get(String(nm == null ? "" : nm).trim());
   if(!ent || !ent.length) return false;
   const fi = ent[0][0], li = ent[0][1];
+  /* 🛑 第63轮·纯浮层短路：若建筑详情浮层正开着（BLD_STATE.open 有值 + bldBigWrap 正 flex 显示），
+     说明用户是在浮层里点「前置建筑」——只把浮层内容换成目标建筑后直接返回，
+     底层总览（派系/筛选/搜索/栅格/滚动）一个字都不碰，浮层与底层彻底隔离。
+     只有"从随从/特质版块跳来"（跳前没有建筑详情浮层）才走下方完整流程。 */
+  if(BLD_STATE.open && bldBigWrap && bldBigWrap.style.display==="flex"){
+    const _F = BLD_FAC[fi];
+    const _lv = (_F && _F.levels) ? _F.levels[li] : null;
+    if(_lv) bldOpenDetail(_lv);
+    return true;
+  }
   /* 先收走随从/特质的面板与全屏视图，否则会压在建筑图鉴之上 */
   try{ if(typeof _panels !== "undefined" && _panels.slice && typeof _closePanel === "function")
         _panels.slice().forEach(function(p){ _closePanel(p); }); }catch(e){}
@@ -5364,7 +5370,16 @@ function bldOpenByName(nm){
   const sel = document.getElementById("bldFac"); if(sel) sel.value = String(fi);
   const hi = document.getElementById("bldHidden"); if(hi) BLD_STATE.showHidden = !!hi.checked;
   const q = document.getElementById("bldQ"); if(q) q.value = "";
-  bldShow(true);
+  /* 🛑 第62轮：区分入口——建筑总览本已开着（从建筑详情浮层点「前置建筑」金色名跳来）
+     就保存并还原滚动位置、只重渲染，绝不把总览顶回顶部（浮层操作与底层界面互相隔离）；
+     总览是关着的（从随从/特质等版块跳来）才走完整 bldShow(true) 打开并置顶。 */
+  if(bldView && !bldView.hidden){
+    const _sb=(bldView.scrollTop||0);
+    bldBuildTabs(); bldRender();
+    try{ bldView.scrollTop=_sb; }catch(_e){}
+  } else {
+    bldShow(true);
+  }
   const F = BLD_FAC[fi];
   const lv = (F && F.levels) ? F.levels[li] : null;
   if(lv) bldOpenDetail(lv);
