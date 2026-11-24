@@ -1,11 +1,20 @@
 {
-  "versionCode": 69,
-  "versionName": "2.2.23",
-  "htmlSize": 60285827,
-  "htmlSha256": "2db560cc0c78cc399b5fa4c175c158b377b4152cd7e746e20426f9b6972f7795",
+  "versionCode": 91,
+  "versionName": "2.2.45",
+  "htmlSize": 61365070,
+  "htmlSha256": "c12ef55147d1c46b9eca72739c02f475b6ee0ff74f7f19794fb6e03451f38ae6",
   "htmlUrls": [
-    "https://gitee.com/ksaMask/eb1-encyclopedia/releases/download/v2.2.23/encyclopedia.html",
+    "https://gitee.com/ksaMask/eb1-encyclopedia/releases/download/v2.2.45/encyclopedia.html",
     "https://gh-proxy.com/https://github.com/ksaMask123/eb1-encyclopedia/raw/main/encyclopedia.html",
     "https://gitee.com/ksaMask/eb1-encyclopedia/raw/master/encyclopedia.html"
+  ],
+  "_note1": "Gitee release attachment first: /raw/ returns 403 for large files.",
+  "_note2": "htmlSize + htmlSha256 computed from the exact uploaded bytes (LF-normalized, no CRLF).",
+  "_note3": "Bump versionCode and recalc size/sha for every new content release.",
+  "_released": "2026-11-24 vc91/2.2.45 舰船招募地港口化(shipsByFaction 真实港口省,替代全图全绿)+雇佣军改可雇佣+易受破甲效果+火攻收紧步兵弓手+耐力三档统一+特性浮层6条理顺+加载更多跳顶修复(实机已验); 基于线上vc90反编译基座出包, 原证书eb1.jks签名, 覆盖安装不丢数据",
+  "apkSize": 61839138,
+  "apkSha256": "c15558db00f5e0644320aa355a4e15b168ab7f728030a7feaf8d1f8347d0bffd",
+  "apkUrls": [
+    "https://gitee.com/ksaMask/eb1-encyclopedia/releases/download/v2.2.45/EBIpedia_2.2.45_vc91.apk"
   ]
 }
